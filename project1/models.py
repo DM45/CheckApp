@@ -51,7 +51,11 @@ class Document(models.Model):
 
 	DOCUMENT_STATUS = [ACTUAL, INWORK, IRRELEVANT, REWORK, CHECKING]
 
-	name = models.TextField()
+	DOCUMENT_CONTROLER_STATUS = [ACTUAL, REWORK]
+
+	DOCUMENT_PERFORMER_STATUS = [CHECKING]
+
+	name = models.CharField(max_length=50)
 	department = models.TextField(choices=[(x, x) for x in DOCUMENT_DEPARTMENT])
 	check_period = models.IntegerField(choices=((1,'1'), (3,'3'), (6,'6'), (12,'12')))
 	last_success_check_date = models.DateField(default=None, null=True)
@@ -59,6 +63,7 @@ class Document(models.Model):
 	next_check_date = models.DateField()
 	status = models.TextField(default=IRRELEVANT, choices=[(x, x) for x in DOCUMENT_STATUS])
 	document_file = models.FileField(blank=True)
+
 
 #	def get_absolute_url(self):
 #		return reverse('document_edit', kwargs={'pk': self.pk})
@@ -94,11 +99,11 @@ class Document(models.Model):
 		self.status = 'Актуально'
 		self.save(update_fields=['status'])
 '''
-
+'''
 
 class BaseUser(models.Model):
-	CONTROLLER = 'Control'
-	PERFORMER = 'Perform'
+	CONTROLLER = 'ЦО'
+	PERFORMER = 'ЦЭС'
 
 	USER_ROLE = [CONTROLLER, PERFORMER]
 
@@ -106,4 +111,4 @@ class BaseUser(models.Model):
 	role = models.TextField(choices=[(x, x) for x in USER_ROLE], blank=True)
 
 
-
+'''

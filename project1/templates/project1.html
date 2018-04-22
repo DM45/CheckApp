@@ -22,6 +22,15 @@
 {% endfor %}
 </p>
 
+
+{% if not user.is_authenticated %}
+<a href="/login" class="btn btn-primary" role="button" aria-pressed="true">Войти</a>
+{% endif %}
+
+{% if user.is_authenticated %}
+<a href="/logout" class="btn btn-primary" role="button" aria-pressed="true">Выйти</a>
+{% endif %}
+
 <h3>
 	Неактуальных документов всего: {{ irrelevant_documents|length }}
 </h3>
@@ -69,9 +78,10 @@
 		<div class="alert alert-danger" role="alert">
    			<h5>{{ document.name }}
    			{{ document.department }}
-   			{{ document.document_file }}</h5>
-   			<a class="btn btn-default" href="{% url 'document_edit' pk=document.pk %}"> Изменение </a>
-
+   			</h5>
+   			{% if user.is_authenticated %}
+   			<a class="btn btn-primary" href="{% url 'document_edit' pk=document.pk %}"> Изменить </a>
+   			{% endif %}
 
 		</div>
 		{% endif %}
@@ -204,16 +214,3 @@
 </body>
 
 </html>
-
-
-
-		<div class="alert alert-warning" role="alert">
-			<h5>{{ document.name }}
-			{{ document.department }}</h5>
-			<form>
-  			<div class="form-group">
-    		<label for="exampleFormControlFile1">Example file input</label>
-    		<input type="file" class="form-control-file" id="exampleFormControlFile1">
-  			</div>
-			</form>
-		</div>

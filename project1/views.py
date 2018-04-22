@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
 from .models import Document
-#from .forms import UpdateDocumentForm
+from .forms import UpdateDocumentForm
 
 
 class DocumentsView(ListView):
@@ -26,9 +26,18 @@ class DocumentsView(ListView):
 class DocumentUpdate(UpdateView):
 	template_name = 'document_form.html'
 	model = Document
-	fields = ['name', 'department', 'last_success_check_date', 'document_file']
+	form_class = UpdateDocumentForm
+#	fields = ['name', 'department', 'last_success_check_date', 'document_file', 'status']
 	success_url = '/'
 
+'''
+    def __init__(self, *args, **kwargs):
+        super(ContactForm, self).__init__(*args, **kwargs)
+        self.fields['topic'].queryset = ContactTopic.objects.filter(
+            is_active=True,
+        )
+
+'''
 
 #	form = UpdateDocumentForm
 '''
