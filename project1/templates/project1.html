@@ -1,0 +1,219 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>Documents status</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+		<link rel="stylesheet" href="{% static 'css/project1.css' %}">
+
+
+    </head>
+    <body>
+
+<p hidden>
+
+{% for document in object_list %}
+ {{document.change_abilitys}}
+
+{% endfor %}
+</p>
+
+<h3>
+	Неактуальных документов всего: {{ irrelevant_documents|length }}
+</h3>
+
+<h5>
+	Неактуальных документов в ТЦЭС: {{ irrelevant_tomsk|length }}
+</h5>
+<h5>
+	Неактуальных документов в ПЦЭС: {{ irrelevant_parabel|length }}
+</h5>
+<h5>
+	Неактуальных документов в КЦЭС: {{ irrelevant_kedrovij|length }}
+</h5>
+<h5>
+	Неактуальных документов в СЦЭС: {{ irrelevant_strejevoy|length }}
+</h5>
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Весь перечень</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-contact1" role="tab" aria-controls="pills-contact1" aria-selected="false">Томский ЦЭС</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact2" role="tab" aria-controls="pills-contact2" aria-selected="false">Парабельский ЦЭС</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact3" role="tab" aria-controls="pills-contact3" aria-selected="false">Кедровский ЦЭС</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact4" role="tab" aria-controls="pills-contact4" aria-selected="false">Стрежевской ЦЭС</a>
+  </li>
+</ul>
+
+<div class="w-50 p-3">
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+
+    {% for document in object_list %}
+	<div>
+		{% if document.status == 'Неактуально' %}
+
+		<div class="alert alert-danger" role="alert">
+   			<h5>{{ document.name }}
+   			{{ document.department }}
+   			{{ document.document_file }}</h5>
+   			<a class="btn btn-default" href="{% url 'document_edit' pk=document.pk %}"> Изменение </a>
+
+
+		</div>
+		{% endif %}
+
+ 		{% if document.status == 'В работе' %}
+
+		{% endif %}
+
+		{% if document.status == 'Актуально' %}
+		<div class="alert alert-success" role="alert">
+			<h5>{{ document.name }}
+			{{ document.department }}</h5>
+			<a class="btn btn-default" href="{% url 'document_edit' pk=document.pk %}"> Изменение </a>
+		</div>
+		{% endif %}
+
+
+	</div>
+	{% endfor %} 
+  </div>
+  <div class="tab-pane fade" id="pills-contact1" role="tabpanel" aria-labelledby="pills-contact-tab">
+  	    {% for document in tomsk_ces %}
+	<div>
+		{% if document.status == IRRELEVANT %}
+
+		<div class="alert alert-danger" role="alert">
+   			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+ 		{% if document.status == INWORK %}
+		<div class="alert alert-warning" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+		{% if document.status == ACTUAL %}
+		<div class="alert alert-success" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+
+	</div>
+	{% endfor %} 
+  </div>
+  <div class="tab-pane fade" id="pills-contact2" role="tabpanel" aria-labelledby="pills-contact-tab">
+  	  	    {% for document in parabel_ces %}
+	<div>
+		{% if document.status == IRRELEVANT %}
+
+		<div class="alert alert-danger" role="alert">
+   			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+ 		{% if document.status == INWORK %}
+		<div class="alert alert-warning" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+		{% if document.status == ACTUAL %}
+		<div class="alert alert-success" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+
+	</div>
+	{% endfor %} 
+
+  </div>
+  <div class="tab-pane fade" id="pills-contact3" role="tabpanel" aria-labelledby="pills-contact-tab">
+  	  	  	    {% for document in kedrovij_ces %}
+	<div>
+		{% if document.status == IRRELEVANT %}
+
+		<div class="alert alert-danger" role="alert">
+   			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+ 		{% if document.status == INWORK %}
+		<div class="alert alert-warning" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+		{% if document.status == ACTUAL %}
+		<div class="alert alert-success" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+
+	</div>
+	{% endfor %} 
+
+  </div>
+  <div class="tab-pane fade" id="pills-contact4" role="tabpanel" aria-labelledby="pills-contact-tab">
+  	  	  	  	    {% for document in strejevoy_ces %}
+	<div>
+		{% if document.status == IRRELEVANT %}
+
+		<div class="alert alert-danger" role="alert">
+   			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+ 		{% if document.status == INWORK %}
+		<div class="alert alert-warning" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+		{% if document.status == ACTUAL %}
+		<div class="alert alert-success" role="alert">
+			<h5>{{ document.name }}</h5>
+		</div>
+		{% endif %}
+
+
+	</div>
+	{% endfor %} 
+</div>
+  </div>
+</div>
+
+</body>
+
+</html>
+
+
+
+		<div class="alert alert-warning" role="alert">
+			<h5>{{ document.name }}
+			{{ document.department }}</h5>
+			<form>
+  			<div class="form-group">
+    		<label for="exampleFormControlFile1">Example file input</label>
+    		<input type="file" class="form-control-file" id="exampleFormControlFile1">
+  			</div>
+			</form>
+		</div>
