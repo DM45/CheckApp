@@ -1,16 +1,18 @@
 from django import forms
 from .models import Document
 from django.contrib.auth.models import User
+from project1.choices import *
 
+
+ACTUAL = 'Актуально'
+IRRELEVANT = 'Неактуально'
+REWORK = 'На доработке'
+CHECKING = 'На проверке'
+
+DOCUMENT_STATUS_LIMIT =  (('CHECKING', 'На проверке'), ('IRRELEVANT', 'Неактуально'))
 
 class UpdateDocumentForm(forms.ModelForm):
-	ACTUAL = 'Актуально'
-	IRRELEVANT = 'Неактуально'
-	REWORK = 'На доработке'
-	CHECKING = 'На проверке'
-
-	DOCUMENT_STATUS_LIMIT = [ACTUAL, IRRELEVANT, REWORK, CHECKING]
-
+	
 	class Meta:
 		model = Document
 		fields = ('name', 'department', 'last_success_check_date', 'document_file', 'status')
@@ -18,11 +20,21 @@ class UpdateDocumentForm(forms.ModelForm):
 		'last_success_check_date': 'Дата последней успешной проверки', 'document_file': 'Файл',
 		'status': 'Статус'}
 
-		def __init__(self, *args, **kwargs):
-			groups = kwargs.pop('groups')
+	def __init__(self, *args, **kwargs):
+		groups = kwargs.pop('groups')
+		super(UpdateDocumentForm, self).__init__(*args, **kwargs)
+#		if groups:
+		if 'Controler' in groups.all().values_list('name', flat=True):
+			self.fields['status'].choices = DOCUMENT_STATUS_LIMIT
+
+'''
+		def __init__(self, user_group, *args, **kwargs):
+#			self.request = kwargs.pop('request')
 			super(UpdateDocumentForm, self).__init__(*args, **kwargs)
-			if groups == 'Controler':
+			self.user_group = user_group
+			if self.user_group == 'Controler':
 				self.fields['status'].choices = DOCUMENT_STATUS_LIMIT
+'''
 '''
 		def __init__(self, *args, **kwargs):
 			super().__init__(*args, **kwargs)

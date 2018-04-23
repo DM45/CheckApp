@@ -27,7 +27,6 @@ class DocumentUpdate(UpdateView):
 	template_name = 'document_form.html'
 	model = Document
 	form_class = UpdateDocumentForm
-#	fields = ['name', 'department', 'last_success_check_date', 'document_file', 'status']
 	success_url = '/'
 
 	def get_form_kwargs(self, **kwargs):
@@ -35,6 +34,13 @@ class DocumentUpdate(UpdateView):
 		kwargs['groups'] = self.request.user.groups
 		return kwargs
 
+
+'''
+	def get_form_kwargs(self):
+		kwargs = super(DocumentUpdate, self).get_form_kwargs()
+		kwargs['user_group'] = self.request.user.groups
+		return kwargs
+'''
 '''
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)

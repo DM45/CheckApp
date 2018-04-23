@@ -41,19 +41,10 @@ class Document(models.Model):
 	KEDROVIJ = 'КЦЭС'
 	STREJEVOY = 'СЦЭС'
 
-	ACTUAL = 'Актуально'
-	INWORK = 'В работе'
-	IRRELEVANT = 'Неактуально'
-	REWORK = 'На доработке'
-	CHECKING = 'На проверке'
-
 	DOCUMENT_DEPARTMENT = [TOMSK, PARABEL, KEDROVIJ, STREJEVOY]
 
-	DOCUMENT_STATUS = [ACTUAL, INWORK, IRRELEVANT, REWORK, CHECKING]
-
-	DOCUMENT_CONTROLER_STATUS = [ACTUAL, REWORK]
-
-	DOCUMENT_PERFORMER_STATUS = [CHECKING]
+	DOCUMENT_STATUS = (('CHECKING', 'На проверке'), ('IRRELEVANT', 'Неактуально'),
+		('ACTUAL', 'Актуально'), ('INWORK', 'В работе'), ('REWORK', 'На доработке'))
 
 	name = models.CharField(max_length=50)
 	department = models.TextField(choices=[(x, x) for x in DOCUMENT_DEPARTMENT])
@@ -61,7 +52,7 @@ class Document(models.Model):
 	last_success_check_date = models.DateField(default=None, null=True)
 	objects = DocumentQuerySet.as_manager()
 	next_check_date = models.DateField()
-	status = models.TextField(default=IRRELEVANT, choices=[(x, x) for x in DOCUMENT_STATUS])
+	status = models.TextField(default='IRRELEVANT', choices=DOCUMENT_STATUS)
 	document_file = models.FileField(blank=True)
 
 
@@ -81,15 +72,15 @@ class Document(models.Model):
 			self.last_success_check_date > self.next_check_date - relativedelta(days=10))):
 	   		self.status = 'Актуально'
 	   		self.save(update_fields=['status'])
-
-		elif ((self.next_check_date - relativedelta(days=10) < today) and (
+		if ((self.next_check_date - relativedelta(days=10) < today) and (
 			self.last_success_check_date > (self.next_check_date - relativedelta(days=10) - relativedelta(months=self.check_period)))):
 			self.status = 'В работе'
 			self.save(update_fields=['status'])
-      	
-		else:
+		if self.status != 'В работе' or self.status != 'На проверке':
+#		else:
 			self.status = 'Неактуально'
 			self.save(update_fields=['status'])
+
 
 '''
 	def actual_button(self):
