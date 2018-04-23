@@ -9,7 +9,7 @@ class UpdateDocumentForm(forms.ModelForm):
 	REWORK = 'На доработке'
 	CHECKING = 'На проверке'
 
-	DOCUMENT_STATUS = [ACTUAL, IRRELEVANT, REWORK, CHECKING]
+	DOCUMENT_STATUS_LIMIT = [ACTUAL, IRRELEVANT, REWORK, CHECKING]
 
 	class Meta:
 		model = Document
@@ -19,31 +19,17 @@ class UpdateDocumentForm(forms.ModelForm):
 		'status': 'Статус'}
 
 		def __init__(self, *args, **kwargs):
-			groupe = kwargs.pop('groups')
+			groups = kwargs.pop('groups')
 			super(UpdateDocumentForm, self).__init__(*args, **kwargs)
-			if groupe == 'Controler':
-				self.fields['status'].choices = DOCUMENT_STATUS
-
-
-
-
-			'''
-			self.user.groupe = kwargs.pop('groups')
-			super(UpdateDocumentForm).__init__(*args, **kwargs)
-			if groupe == 'Controler':			
-				self.fields['status'].choices = DOCUMENT_STATUS'''
-
-
-#self.fields['status'].choices = ['Actual', 'In work']
+			if groups == 'Controler':
+				self.fields['status'].choices = DOCUMENT_STATUS_LIMIT
 '''
-	ACTUAL = 'Актуально'
-	IRRELEVANT = 'Неактуально'
-	REWORK = 'На доработке'
-	CHECKING = 'На проверке'
+		def __init__(self, *args, **kwargs):
+			super().__init__(*args, **kwargs)
+			if request.user.groups != 'Controler':			
+				self.fields['status'].choices = ['Актуально', 'На доработке', 'Неактуально', 'В работе']
 
-	DOCUMENT_STATUS = [ACTUAL, IRRELEVANT, REWORK, CHECKING]
-	if request.user.groups != 'Controler':
-		status =  forms.ChoiceField(choices=[(x, x) for x in DOCUMENT_STATUS])
-'''
+	name =  forms.ChoiceField(choices=[(x, x) for x in DOCUMENT_STATUS])
 
+self.fields['status'].choices = ['Actual', 'In work']'''
 

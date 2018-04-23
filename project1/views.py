@@ -30,6 +30,11 @@ class DocumentUpdate(UpdateView):
 #	fields = ['name', 'department', 'last_success_check_date', 'document_file', 'status']
 	success_url = '/'
 
+	def get_form_kwargs(self, **kwargs):
+		kwargs = super().get_form_kwargs(**kwargs)
+		kwargs['groups'] = self.request.user.groups
+		return kwargs
+
 '''
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
