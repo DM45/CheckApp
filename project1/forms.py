@@ -4,21 +4,16 @@ from django.contrib.auth.models import User
 from project1.choices import *
 
 
-ACTUAL = 'Актуально'
-IRRELEVANT = 'Неактуально'
-REWORK = 'На доработке'
-CHECKING = 'На проверке'
-
 DOCUMENT_STATUS_LIMIT =  (('CHECKING', 'На проверке'), ('IRRELEVANT', 'Неактуально'))
 
 class UpdateDocumentForm(forms.ModelForm):
 	
 	class Meta:
 		model = Document
-		fields = ('name', 'department', 'last_success_check_date', 'document_file', 'status')
+		fields = ('name', 'department', 'last_success_check_date', 'document_file', 'status', 'comment')
 		labels = {'name':'Название документа', 'department': 'ЦЭС',
 		'last_success_check_date': 'Дата последней успешной проверки', 'document_file': 'Файл',
-		'status': 'Статус'}
+		'status': 'Статус', 'comment': 'Комментарий'}
 
 	def __init__(self, *args, **kwargs):
 		groups = kwargs.pop('groups')

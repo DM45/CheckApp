@@ -19,19 +19,19 @@ class DocumentQuerySet(models.QuerySet):
 		return self.filter(department='СЦЭС')
 
 	def irrelevant(self):
-		return self.filter(status='Неактуально')
+		return self.filter(status='IRRELEVANT')
 
 	def irrelevant_tomsk(self):
-		return self.filter(status='Неактуально').filter(department='ТЦЭС')
+		return self.filter(status='IRRELEVANT').filter(department='ТЦЭС')
 
 	def irrelevant_parabel(self):
-		return self.filter(status='Неактуально').filter(department='ПЦЭС')
+		return self.filter(status='IRRELEVANT').filter(department='ПЦЭС')
 
 	def irrelevant_kedrovij(self):
-		return self.filter(status='Неактуально').filter(department='КЦЭС')
+		return self.filter(status='IRRELEVANT').filter(department='КЦЭС')
 
 	def irrelevant_strejevoy(self):
-		return self.filter(status='Неактуально').filter(department='СЦЭС')
+		return self.filter(status='IRRELEVANT').filter(department='СЦЭС')
 
 
 class Document(models.Model):
@@ -54,6 +54,7 @@ class Document(models.Model):
 	next_check_date = models.DateField()
 	status = models.TextField(default='IRRELEVANT', choices=DOCUMENT_STATUS)
 	document_file = models.FileField(blank=True)
+	comment = models.TextField(blank=True)
 
 
 #	def get_absolute_url(self):
@@ -70,17 +71,19 @@ class Document(models.Model):
 			self.next_check_date - relativedelta(days=10) - relativedelta(months=self.check_period) < self.last_success_check_date))
 		or ((self.next_check_date - relativedelta(days=10) < today) and 
 			self.last_success_check_date > self.next_check_date - relativedelta(days=10))):
-	   		self.status = 'Актуально'
+	   		self.status = 'ACTUAL'
 	   		self.save(update_fields=['status'])
-		if ((self.next_check_date - relativedelta(days=10) < today) and (
+		elif ((self.next_check_date - relativedelta(days=10) < today) and (
 			self.last_success_check_date > (self.next_check_date - relativedelta(days=10) - relativedelta(months=self.check_period)))):
-			self.status = 'В работе'
+			self.status = 'INWORK'
 			self.save(update_fields=['status'])
-		if self.status != 'В работе' or self.status != 'На проверке':
+		elif self.status != 'INWORK' or self.status != 'CHECKING':
 #		else:
-			self.status = 'Неактуально'
+			self.status = 'IRRELEVANT'
 			self.save(update_fields=['status'])
-
+		else: 
+			self.status = 'IRRELEVANT'
+			self.save(update_fields=['status'])
 
 '''
 	def actual_button(self):

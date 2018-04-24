@@ -15,11 +15,11 @@
     <body>
 
 <p hidden>
-
 {% for document in object_list %}
  {{document.change_abilitys}}
 
 {% endfor %}
+
 </p>
 
 
@@ -73,7 +73,7 @@
 
     {% for document in object_list %}
 	<div>
-		{% if document.status == 'Неактуально' %}
+		{% if document.status == 'IRRELEVANT' %}
 
 		<div class="alert alert-danger" role="alert">
    			<h5>{{ document.name }}
@@ -86,11 +86,8 @@
 		</div>
 		{% endif %}
 
- 		{% if document.status == 'В работе' %}
 
-		{% endif %}
-
-		{% if document.status == 'Актуально' %}
+		{% if document.status == 'ACTUAL' %}
 		<div class="alert alert-success" role="alert">
 			<h5>{{ document.name }}
 			{{ document.department }}</h5>
